@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DiscoverBlock from './DiscoverBlock/components/DiscoverBlock';
 import '../styles/_discover.scss';
-import axios from 'axios';
+import axios from   "axios"
 
 //TODO: Fix `any` types here
 
@@ -11,6 +11,7 @@ interface IDiscoverState {
   newReleases: Array<any>;
   playlists: Array<any>;
   categories: Array<any>;
+  token: string;
 }
 
 export default class Discover extends Component<IDiscoverProps, IDiscoverState> {
@@ -20,15 +21,18 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     this.state = {
       newReleases: [],
       playlists: [],
-      categories: []
+      categories: [],
+      token:"",
     };
   }
 
   //TODO: Handle APIs
-  componentDidMount() {
+   //playlists
+
+   async componentDidMount() {
     var spotify_client_id=process.env.REACT_APP_SPOTIFY_CLIENT_ID
     var spotify_client_secret=process.env.REACT_APP_SPOTIFY_CLIENT_SECRET 
-  
+ 
   //API access token
   var authParameters={
     method:'POST',
@@ -38,14 +42,34 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     body:'grant_type=client_credentials&client_id='+spotify_client_id+'&client_secret='+spotify_client_secret
   }
   fetch('https://accounts.spotify.com/api/token',authParameters)
-  .then(result=>result.json())
-  .then(data=>console.log((data.access_token)));
+  .then(result=>  result.json())
+  .then( async data=> await this.setState({token:data.access_token}))
 
   
-   }
+ axios("https://api.spotify.com/v1/browse/featured-playlists", {
+  method:"GET",
+  headers: {
+      Authorization: 'Bearer ' + this.state.token,   
+    
+         
+  },
+})
+      .then( res => {
+        const playlists =  res.data;
+        console.log(res.data);
+        
+        this.setState({ playlists });
+      }).catch((error) => {
+        console.log("error", error.message);
+      })
+      console.log(this.state.playlists);
+
+  }
+
+
   render() {
     const { newReleases, playlists, categories } = this.state;
-
+    console.log(this.state.token);
     return (
       <div className="discover">
         <DiscoverBlock text="RELEASED THIS WEEK" id="released" data={newReleases} />
