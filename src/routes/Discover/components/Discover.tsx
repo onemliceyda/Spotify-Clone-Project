@@ -25,8 +25,24 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
   }
 
   //TODO: Handle APIs
+  componentDidMount() {
+    var spotify_client_id=process.env.REACT_APP_SPOTIFY_CLIENT_ID
+    var spotify_client_secret=process.env.REACT_APP_SPOTIFY_CLIENT_SECRET 
+  
+  //API access token
+  var authParameters={
+    method:'POST',
+    headers:{
+      'Content-Type':'application/x-www-form-urlencoded'
+    },
+    body:'grant_type=client_credentials&client_id='+spotify_client_id+'&client_secret='+spotify_client_secret
+  }
+  fetch('https://accounts.spotify.com/api/token',authParameters)
+  .then(result=>result.json())
+  .then(data=>console.log((data.access_token)));
 
   
+   }
   render() {
     const { newReleases, playlists, categories } = this.state;
 
