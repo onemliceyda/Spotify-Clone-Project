@@ -41,31 +41,28 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     },
     body:'grant_type=client_credentials&client_id='+spotify_client_id+'&client_secret='+spotify_client_secret
   }
-  fetch('https://accounts.spotify.com/api/token',authParameters)
-  .then(result=>  result.json())
-  .then( async data=> await this.setState({token:data.access_token}))
+ const res= await fetch('https://accounts.spotify.com/api/token',authParameters)
+ const data= await res.json()
+  this.setState({token:data.access_token})
+  console.log(data.access_token);
 
   
- axios("https://api.spotify.com/v1/browse/featured-playlists", {
+ await axios("https://api.spotify.com/v1/browse/featured-playlists", {
   method:"GET",
   headers: {
-      Authorization: 'Bearer ' + this.state.token,   
-    
-         
+      Authorization: 'Bearer ' + this.state.token,       
   },
 })
-      .then( res => {
-        const playlists =  res.data;
+       .then( res => {
+        const playlists =  res.data.playlists.items;
         console.log(res.data);
-        
         this.setState({ playlists });
       }).catch((error) => {
         console.log("error", error.message);
       })
-      console.log(this.state.playlists);
+      console.log(this.state);
 
   }
-
 
   render() {
     const { newReleases, playlists, categories } = this.state;
