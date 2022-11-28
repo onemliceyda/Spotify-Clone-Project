@@ -1,10 +1,11 @@
 import React from 'react';
+import {  ImageType } from '../../Discover';
 import '../styles/_discover-item.scss';
 
 //TODO: Fix types here
 interface IDiscoverItemProps {
-  images: Array<any>;
-  name: any;
+  images: Array<ImageType>;
+  name: string;
 }
 
 export default class DiscoverItem extends React.Component<IDiscoverItemProps> {

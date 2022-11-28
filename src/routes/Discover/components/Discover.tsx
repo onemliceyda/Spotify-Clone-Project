@@ -7,10 +7,29 @@ import axios from "axios"
 
 interface IDiscoverProps { }
 
+export type IconType = {
+  url: string,
+  height: number,
+  width: number
+}
+export type ImageType = {
+  url: string,
+  height: number,
+  width: number
+}
+export type ImagesType = {
+  name: string,
+  images: Array<ImageType>
+}
+
+export type IconsType = {
+  name: string,
+  icons: Array<IconType>
+}
 interface IDiscoverState {
-  newReleases: Array<any>;
-  playlists: Array<any>;
-  categories: Array<any>;
+  newReleases: Array<ImagesType>;
+  playlists: Array<ImagesType>;
+  categories: Array<IconsType>;
   token: string;
 }
 
@@ -27,7 +46,6 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
   }
 
   //TODO: Handle APIs
-  //playlists
 
   async componentDidMount() {
     var spotify_client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID
@@ -44,9 +62,8 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     const res = await fetch('https://accounts.spotify.com/api/token', authParameters)
     const data = await res.json()
     this.setState({ token: data.access_token })
-    console.log(data.access_token);
 
-
+    //Get featured-playlists and list them
     await axios("https://api.spotify.com/v1/browse/featured-playlists", {
       method: "GET",
       headers: {
@@ -55,14 +72,13 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     })
       .then(res => {
         const playlists = res.data.playlists.items;
-        console.log(res.data);
         this.setState({ playlists });
       }).catch((error) => {
         console.log("error", error.message);
       })
-    console.log(this.state);
 
 
+    //Get new-releases and list them
 
     await axios("https://api.spotify.com/v1/browse/new-releases", {
       method: "GET",
@@ -72,18 +88,16 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
     })
       .then(res => {
         const newReleases = res.data.albums.items
-        console.log(res.data.albums.items);
         this.setState({ newReleases })
       })
       .catch((error) => {
         console.log("error", error.message);
       })
-    console.log(this.state);
 
 
 
 
-
+    //Get categories and list them
 
     await axios("https://api.spotify.com/v1/browse/categories", {
       method: "GET",
@@ -99,7 +113,6 @@ export default class Discover extends Component<IDiscoverProps, IDiscoverState> 
       .catch((error) => {
         console.log("error", error.message);
       })
-    console.log(this.state);
 
   }
 
