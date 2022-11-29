@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import DiscoverItem from './DiscoverItem';
 import '../styles/_discover-block.scss';
-import { ImagesType,IconsType } from '../../Discover';
+import { ImagesType, IconsType } from '../../Discover';
 
 
 //TODO: Fix types here
 
-const scrollContainer = (id: string, { isNegative }: {isNegative?:boolean}={}) => {
+const scrollContainer = (id: string, { isNegative }: { isNegative?: boolean } = {}) => {
   return () => {
     const scrollableContainer: any = document.getElementById(id);
     const amount = isNegative ? -scrollableContainer.offsetWidth : scrollableContainer.offsetWidth;
@@ -20,7 +20,7 @@ const scrollContainer = (id: string, { isNegative }: {isNegative?:boolean}={}) =
 interface IDiscoverBlockProps {
   text: string;
   id: string;
-  data: Array<ImagesType>| Array<IconsType>;
+  data: Array<ImagesType> | Array<IconsType>;
   imagesKey: "icons" | "images"
 }
 
